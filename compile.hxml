@@ -1,0 +1,3 @@
+--class-path src
+--main vm.Vm
+--hl bin/vm.hl
