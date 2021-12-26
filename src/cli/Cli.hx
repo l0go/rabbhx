@@ -49,7 +49,7 @@ class Cli {
 	}
 
 	static function systemDeviceOutput(device: Device, port: Int): Void {
-		switch(port) {
+		switch (port) {
 			case 0x2:
 				device.uxn.wst.ptr = device.data[port];
 			case 0x3:
@@ -60,8 +60,19 @@ class Cli {
 		}
 	}
 
+	static function consoleDeviceOutput(device: Device, port: Int): Void {
+		switch (port) {
+			case 0x1:
+				device.vector = Vm.peek16(device.data, 0x0);
+			case 0x7:
+				Sys.stdout().writeString(Std.string(device.data[0x7]));
+			case 0x8:
+				Sys.stderr().writeString(Std.string(device.data[0x8]));
+		}
+	}
+
 	static function main() {
-		var uxn: Uxn;
+		var uxn: Uxn = Vm.init();
 		var i: Int = 0;
 		var loaded: Int = 0;
 	
@@ -79,9 +90,9 @@ class Cli {
 		Vm.port(uxn, 0x8, nullDeviceInput, nullDeviceOutput);
 		Vm.port(uxn, 0x9, nullDeviceInput, nullDeviceOutput);
 		// File
-		Vm.port(uxn, 0xa, nullDeviceInput, fileDeviceOutput);
+		Vm.port(uxn, 0xa, nullDeviceInput, nullDeviceOutput);
 		// Date Time
-		Vm.port(uxn, 0xb, datetimeDeviceInput, nullDeviceOutput);
+		Vm.port(uxn, 0xb, nullDeviceInput, nullDeviceOutput);
 		// Empty
 		Vm.port(uxn, 0xc, nullDeviceInput, nullDeviceOutput);
 		Vm.port(uxn, 0xd, nullDeviceInput, nullDeviceOutput);

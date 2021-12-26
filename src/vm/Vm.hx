@@ -398,6 +398,29 @@ class Vm {
 		return true;
 	}
 
+	public static function init(): Uxn {
+		var stack: Stack = {
+			ptr: 0,
+			kptr: 0,
+			error: 0,
+			data: []
+		};
+
+		var uxn: Uxn = {
+			wst: stack,
+			rst: stack,
+			src: stack,
+			dst: stack,
+			memory: {
+				ptr: 0,
+				data: []
+			},
+			device: []
+		};
+
+		return uxn;
+	}
+
 	public static function port(uxn: Uxn, id: Int, deifn: (device: Device, port: Int)->Int, deofn: (device: Device, port: Int)->Void): Device {
 		var device: Device = uxn.device[id];
 		device.address = id * 0x10;
